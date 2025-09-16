@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense, lazy } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 
-// Lazy load shader components
+// Lazy load shader components (same as home)
 const MeshGradient = lazy(() => import("@paper-design/shaders-react").then(module => ({ default: module.MeshGradient })))
 
 interface PreloaderSimpleProps {
@@ -22,8 +22,8 @@ export default function PreloaderSimple({
   const [isComplete, setIsComplete] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
 
-  // Fixed gradient colors - sama dengan shader-background-stable
-  const gradientColors = ["#000000", "#3b82f6", "#ffffff", "#1e40af", "#1e3a8a"]
+  // Same gradient colors as home default (shader-background-stable)
+  const gradientColors = ["#000000", "#1d4ed8", "#3b82f6", "#93c5fd", "#312e81"]
 
   useEffect(() => {
     // Preload shader components
@@ -74,7 +74,7 @@ export default function PreloaderSimple({
             }}
             className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center"
         >
-          {/* Background shader yang sama dengan shader-background-stable */}
+          {/* Background shader same as home (no bottom darkening overlay) */}
           <div className="absolute inset-0 w-full h-full bg-black">
             {/* SVG Filters - Simplified (sama dengan shader-background-stable) */}
             <svg className="absolute inset-0 w-0 h-0" aria-hidden="true">
@@ -86,10 +86,10 @@ export default function PreloaderSimple({
               </defs>
             </svg>
 
-            {/* Background Shaders - Lazy loaded dengan setting sama */}
+            {/* Background Shaders - Lazy loaded same settings as home */}
             {isLoaded && (
               <Suspense fallback={
-                <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black via-blue-900 to-black" />
+                <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black via-indigo-700 to-black" />
               }>
                 <MeshGradient
                   className="absolute inset-0 w-full h-full"
@@ -101,7 +101,7 @@ export default function PreloaderSimple({
 
             {/* Fallback gradient saat loading */}
             {!isLoaded && (
-              <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black via-blue-900 to-black" />
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black via-indigo-700 to-black" />
             )}
           </div>
 
@@ -136,7 +136,7 @@ export default function PreloaderSimple({
               {/* Center icon */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <motion.div
-                  className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center"
+                  className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-blue-500 flex items-center justify-center"
                   animate={{ rotate: 360 }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                 >
@@ -172,7 +172,7 @@ export default function PreloaderSimple({
               className="w-64 h-1 bg-white/10 rounded-full overflow-hidden"
             >
               <motion.div
-                className="h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full"
+                className="h-full bg-white/80 rounded-full"
                 style={{ width: `${progress}%` }}
                 transition={{ duration: 0.1 }}
               />
@@ -183,7 +183,7 @@ export default function PreloaderSimple({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7, duration: 0.5 }}
-              className="text-blue-200 text-sm font-mono"
+              className="text-white/80 text-sm font-mono"
             >
               {Math.round(progress)}%
             </motion.div>
@@ -198,7 +198,7 @@ export default function PreloaderSimple({
               {[...Array(3)].map((_, i) => (
                   <motion.div
                     key={i}
-                    className="w-2 h-2 bg-blue-500 rounded-full"
+                    className="w-2 h-2 bg-white/80 rounded-full"
                     animate={{
                       scale: [1, 1.3, 1],
                       opacity: [0.5, 1, 0.5],

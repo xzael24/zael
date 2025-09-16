@@ -1,7 +1,10 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense, lazy } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+
+// Lazy load shader components (same as home)
+const MeshGradient = lazy(() => import("@paper-design/shaders-react").then(module => ({ default: module.MeshGradient })))
 
 interface PreloaderProps {
   onComplete?: () => void
@@ -10,8 +13,24 @@ interface PreloaderProps {
 export default function Preloader({ onComplete }: PreloaderProps) {
   const [progress, setProgress] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  // Same gradient colors as home (shader-background-stable default)
+  const gradientColors = ["#000000", "#1d4ed8", "#3b82f6", "#93c5fd", "#312e81"]
 
   useEffect(() => {
+    // Preload shader component
+    const preloadShaders = async () => {
+      try {
+        await import("@paper-design/shaders-react")
+        setIsLoaded(true)
+      } catch (error) {
+        console.warn('Failed to load shaders:', error)
+        setIsLoaded(true)
+      }
+    }
+    preloadShaders()
+
     // Simulasi loading progress
     const interval = setInterval(() => {
       setProgress(prev => {
@@ -43,8 +62,22 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           }}
           className="fixed inset-0 z-50 bg-black flex items-center justify-center"
         >
-          {/* Background dengan gradient animasi */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black via-purple-900/20 to-black" />
+          {/* Background shader same as home (no bottom darkening overlay) */}
+          <div className="absolute inset-0 w-full h-full">
+            {isLoaded ? (
+              <Suspense fallback={
+                <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black via-indigo-700 to-black" />
+              }>
+                <MeshGradient
+                  className="absolute inset-0 w-full h-full"
+                  colors={gradientColors}
+                  speed={0.3}
+                />
+              </Suspense>
+            ) : (
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black via-indigo-700 to-black" />
+            )}
+          </div>
           
           {/* Animated background particles */}
           <div className="absolute inset-0 overflow-hidden">
@@ -142,7 +175,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
               className="w-64 h-1 bg-white/10 rounded-full overflow-hidden"
             >
               <motion.div
-                className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
+                className="h-full bg-white/80 rounded-full"
                 style={{ width: `${progress}%` }}
                 transition={{ duration: 0.1 }}
               />

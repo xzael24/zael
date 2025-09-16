@@ -1,12 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useIsMobile } from "../hooks/use-mobile"
 import { useSwipeNavigation } from "./swipe-navigation"
 
 export default function SwipeHint() {
   const [isVisible, setIsVisible] = useState(false)
   const [animationPhase, setAnimationPhase] = useState<'idle' | 'left' | 'right' | 'both' | 'fade'>('idle')
   const { currentPage, totalPages } = useSwipeNavigation()
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     // Show hint after 1.5 seconds on first load
@@ -144,20 +146,22 @@ export default function SwipeHint() {
 
 
       {/* Keyboard hint for desktop users - bottom center */}
-      <div 
-        className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40 pointer-events-none transition-all duration-500 ${
-          animationPhase === 'both' 
-            ? 'opacity-100' 
-            : 'opacity-0'
-        }`}
-      >
-        <div className="bg-black/30 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-white/10">
-          <div className="text-white/50 text-xs flex items-center space-x-2">
-            <span>←→</span>
-            <span>Keyboard</span>
+      {!isMobile && (
+        <div 
+          className={`fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40 pointer-events-none transition-all duration-500 ${
+            animationPhase === 'both' 
+              ? 'opacity-100' 
+              : 'opacity-0'
+          }`}
+        >
+          <div className="bg-black/30 backdrop-blur-sm rounded-lg px-3 py-1.5 border border-white/10">
+            <div className="text-white/50 text-xs flex items-center space-x-2">
+              <span>←→</span>
+              <span>Keyboard</span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   )
 }

@@ -60,12 +60,18 @@ export function SwipeNavigationProvider({ children }: SwipeNavigationProviderPro
     if (pageIndex < 0 || pageIndex >= pages.length || isTransitioning) return
     
     setIsTransitioning(true)
-    setCurrentPage(pageIndex)
+    
+    // Use double RAF for smoother state update
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setCurrentPage(pageIndex)
+      })
+    })
     
     // Reset transition state after animation
     setTimeout(() => {
       setIsTransitioning(false)
-    }, 500)
+    }, 300) // Reduced from 500ms for snappier response
   }
 
   const nextPage = () => {
@@ -90,27 +96,44 @@ export function SwipeNavigationProvider({ children }: SwipeNavigationProviderPro
       setTouchEnd(null)
       return
     }
+    // Prevent multiple touches
+    if (e.targetTouches.length > 1) return
+    
     setTouchEnd(null)
     setTouchStart(e.targetTouches[0].clientX)
   }
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (isEventFromExemptArea(e.target)) return
+    if (touchStart === null) return
+    if (e.targetTouches.length > 1) return
+    
     setTouchEnd(e.targetTouches[0].clientX)
   }
 
   const handleTouchEnd = (e?: React.TouchEvent) => {
-    if (e && isEventFromExemptArea(e.target)) return
-    if (!touchStart || !touchEnd) return
+    if (e && isEventFromExemptArea(e.target)) {
+      setTouchStart(null)
+      setTouchEnd(null)
+      return
+    }
+    if (!touchStart || !touchEnd) {
+      setTouchStart(null)
+      setTouchEnd(null)
+      return
+    }
     
     const distance = touchStart - touchEnd
     const isLeftSwipe = distance > 50
     const isRightSwipe = distance < -50
 
+    // Reset touch state immediately to prevent double triggers
+    setTouchStart(null)
+    setTouchEnd(null)
+
     if (isLeftSwipe) {
       nextPage()
-    }
-    if (isRightSwipe) {
+    } else if (isRightSwipe) {
       prevPage()
     }
   }

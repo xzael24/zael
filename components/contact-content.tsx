@@ -2,7 +2,7 @@
 
 export default function ContactContent() {
   return (
-    <main className="fixed bottom-6 right-2 z-20 w-full max-w-md px-4 pr-6 md:pr-0 md:bottom-8 md:right-8 md:max-w-lg md:px-0">
+    <main className="fixed bottom-6 right-1 z-20 w-full max-w-md px-4 pr-6 md:pr-0 md:bottom-8 md:right-8 md:max-w-lg md:px-0">
       <div className="text-right">
         {/* Social icons */}
         <div className="flex justify-end items-center gap-3 flex-wrap mb-4">

@@ -1,12 +1,13 @@
 "use client"
 
-import { Suspense, lazy } from "react"
+import { Suspense, lazy, useState, useCallback } from "react"
 import Header from "@/components/header"
 import HeroContent from "@/components/hero-content"
 import AboutContent from "@/components/about-content"
 import { useSwipeNavigation } from "@/components/swipe-navigation"
 import ProjectsContent from "@/components/projects-content"
 import ContactContent from "@/components/contact-content"
+import WorkWithMeModal from "@/components/work-with-me-modal"
 
 // Lazy load komponen berat untuk optimasi
 const ShaderBackground = lazy(() => import("@/components/shader-background-stable"))
@@ -23,14 +24,18 @@ const ShaderFallback = () => (
 
 export default function HomePage() {
   const { currentPage } = useSwipeNavigation()
+  const [isWorkWithMeOpen, setIsWorkWithMeOpen] = useState(false)
+  const openWorkWithMe = useCallback(() => setIsWorkWithMeOpen(true), [])
+  const closeWorkWithMe = useCallback(() => setIsWorkWithMeOpen(false), [])
   return (
     <Suspense fallback={<ShaderFallback />}>
       <ShaderBackground isAbout={currentPage === 1} isProjects={currentPage === 2} isContact={currentPage === 3}>
         <Header />
-        {currentPage === 0 && <HeroContent />}
+        {currentPage === 0 && <HeroContent onOpenWorkWithMe={openWorkWithMe} />}
         {currentPage === 1 && <AboutContent />}
         {currentPage === 2 && <ProjectsContent />}
-        {currentPage === 3 && <ContactContent />}
+        {currentPage === 3 && <ContactContent onOpenWorkWithMe={openWorkWithMe} />}
+        <WorkWithMeModal isOpen={isWorkWithMeOpen} onClose={closeWorkWithMe} />
       </ShaderBackground>
     </Suspense>
   )

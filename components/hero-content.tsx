@@ -1,6 +1,10 @@
 "use client"
 
-export default function HeroContent() {
+interface HeroContentProps {
+  onOpenWorkWithMe?: () => void
+}
+
+export default function HeroContent({ onOpenWorkWithMe }: HeroContentProps) {
   return (
     <main className="absolute bottom-6 left-1 translate-x-0 z-20 w-full max-w-md px-4 pr-8 md:pr-0 md:bottom-8 md:left-8 md:w-auto md:max-w-lg md:px-0">
       <div className="text-left">
@@ -28,7 +32,10 @@ export default function HeroContent() {
 
         {/* Buttons */}
         <div className="flex items-center gap-3 md:gap-4 flex-wrap justify-start">
-          <button className="px-6 py-2 md:px-8 md:py-3 rounded-full bg-white text-black font-normal text-xs transition-all duration-200 hover:bg-white/90 cursor-pointer">
+          <button
+            onClick={onOpenWorkWithMe}
+            className="px-6 py-2 md:px-8 md:py-3 rounded-full bg-white text-black font-normal text-xs transition-all duration-200 hover:bg-white/90 cursor-pointer"
+          >
             Work With Me
           </button>
         </div>

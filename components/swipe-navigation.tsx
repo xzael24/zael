@@ -91,7 +91,7 @@ export function SwipeNavigationProvider({ children }: SwipeNavigationProviderPro
   }
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    if (isEventFromExemptArea(e.target)) {
+    if (document.body.getAttribute("data-modal-open") === "true" || isEventFromExemptArea(e.target)) {
       setTouchStart(null)
       setTouchEnd(null)
       return
@@ -104,7 +104,7 @@ export function SwipeNavigationProvider({ children }: SwipeNavigationProviderPro
   }
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (isEventFromExemptArea(e.target)) return
+    if (document.body.getAttribute("data-modal-open") === "true" || isEventFromExemptArea(e.target)) return
     if (touchStart === null) return
     if (e.targetTouches.length > 1) return
     
@@ -112,7 +112,7 @@ export function SwipeNavigationProvider({ children }: SwipeNavigationProviderPro
   }
 
   const handleTouchEnd = (e?: React.TouchEvent) => {
-    if (e && isEventFromExemptArea(e.target)) {
+    if ((typeof document !== 'undefined' && document.body.getAttribute("data-modal-open") === "true") || (e && isEventFromExemptArea(e.target))) {
       setTouchStart(null)
       setTouchEnd(null)
       return
@@ -140,7 +140,7 @@ export function SwipeNavigationProvider({ children }: SwipeNavigationProviderPro
 
   // Mouse handlers for desktop
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (isEventFromExemptArea(e.target)) {
+    if (document.body.getAttribute("data-modal-open") === "true" || isEventFromExemptArea(e.target)) {
       setTouchStart(null)
       setTouchEnd(null)
       return
@@ -150,13 +150,14 @@ export function SwipeNavigationProvider({ children }: SwipeNavigationProviderPro
   }
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (isEventFromExemptArea(e.target)) return
+    if (document.body.getAttribute("data-modal-open") === "true" || isEventFromExemptArea(e.target)) return
     if (touchStart !== null) {
       setTouchEnd(e.clientX)
     }
   }
 
   const handleMouseUp = () => {
+    if (document.body.getAttribute("data-modal-open") === "true") return
     if (!touchStart || !touchEnd) return
     
     const distance = touchStart - touchEnd
@@ -177,6 +178,7 @@ export function SwipeNavigationProvider({ children }: SwipeNavigationProviderPro
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (document.body.getAttribute("data-modal-open") === "true") return
       if (e.key === "ArrowLeft") {
         prevPage()
       } else if (e.key === "ArrowRight") {

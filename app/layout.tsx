@@ -4,10 +4,8 @@ import { Figtree } from "next/font/google"
 import { GeistMono } from "geist/font/mono"
 import { Instrument_Serif } from "next/font/google"
 import "./globals.css"
-import PreloaderSimple from "@/components/preloader-simple"
-import CustomCursor from "@/components/custom-cursor"
-import { SwipeNavigationProvider } from "@/components/swipe-navigation"
 import SwipeHint from "@/components/swipe-hint"
+import AppShell from "@/components/app-shell"
 
 // Optimasi font loading dengan preload dan subset minimal
 const figtree = Figtree({
@@ -79,13 +77,10 @@ html {
         `}</style>
       </head>
       <body className={`${figtree.variable} ${instrumentSerif.variable}`}>
-        <CustomCursor />
-        <SwipeNavigationProvider>
-          <PreloaderSimple>
-            {children}
-            <SwipeHint />
-          </PreloaderSimple>
-        </SwipeNavigationProvider>
+        <AppShell>
+          {children}
+          <SwipeHint />
+        </AppShell>
       </body>
     </html>
   )

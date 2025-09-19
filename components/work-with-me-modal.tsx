@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 interface WorkWithMeModalProps {
   isOpen: boolean
@@ -9,6 +10,7 @@ interface WorkWithMeModalProps {
 
 export default function WorkWithMeModal({ isOpen, onClose }: WorkWithMeModalProps) {
   const dialogRef = useRef<HTMLDivElement | null>(null)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     if (isOpen) {
@@ -166,6 +168,17 @@ export default function WorkWithMeModal({ isOpen, onClose }: WorkWithMeModalProp
           </div>
         </div>
       </div>
+      {/* Cool hint buat dismiss */}
+<div
+  className={`absolute inset-x-0 bottom-3 md:bottom-6 z-[101] flex justify-center transition-all duration-300 ease-out ${
+    isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+  }`}
+  aria-hidden="true"
+>
+  <span className="text-xs text-white/80 font-medium drop-shadow-lg animate-pulse">
+    {isMobile ? "Tap anywhere outside to dismiss" : "Click anywhere outside to dismiss"}
+  </span>
+</div>
     </div>
   )
 }

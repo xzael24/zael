@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, Suspense, lazy } from "react"
+import { usePerformanceTuner } from "@/hooks/use-performance-tuner"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 
@@ -21,6 +22,7 @@ export default function PreloaderSimple({
   const [progress, setProgress] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
+  const { animationSpeed, qualityScale, effectiveDpr } = usePerformanceTuner({ baseSpeed: 0.3 })
 
   // Same gradient colors as home default (shader-background-stable)
   const gradientColors = ["#000000", "#1d4ed8", "#3b82f6", "#93c5fd", "#312e81"]
@@ -41,25 +43,27 @@ export default function PreloaderSimple({
   }, [])
 
   useEffect(() => {
-    const startTime = Date.now()
-    
-    const updateProgress = () => {
-      const elapsed = Date.now() - startTime
+    const start = performance.now()
+    let rafId: number
+
+    const tick = (ts: number) => {
+      const elapsed = ts - start
       const progressPercent = Math.min((elapsed / duration) * 100, 100)
-      
       setProgress(progressPercent)
-      
+
       if (progressPercent >= 100) {
         setIsComplete(true)
-        setTimeout(() => {
-          onComplete?.()
-        }, 300)
+        setTimeout(() => { onComplete?.() }, 300)
       } else {
-        requestAnimationFrame(updateProgress)
+        rafId = requestAnimationFrame(tick)
       }
     }
-    
-    requestAnimationFrame(updateProgress)
+
+    rafId = requestAnimationFrame(tick)
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId)
+    }
   }, [duration, onComplete])
 
   return (
@@ -94,7 +98,10 @@ export default function PreloaderSimple({
                 <MeshGradient
                   className="absolute inset-0 w-full h-full"
                   colors={gradientColors}
-                  speed={0.3}
+                  speed={animationSpeed}
+                  style={{ imageRendering: qualityScale < 1 ? 'pixelated' as any : undefined, willChange: 'transform, opacity' }}
+                  data-effective-dpr={effectiveDpr}
+                  data-quality-scale={qualityScale}
                 />
               </Suspense>
             )}

@@ -13,11 +13,14 @@ export default function WorkWithMeModal({ isOpen, onClose }: WorkWithMeModalProp
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden"
+      document.body.setAttribute("data-modal-open", "true")
     } else {
       document.body.style.overflow = ""
+      document.body.removeAttribute("data-modal-open")
     }
     return () => {
       document.body.style.overflow = ""
+      document.body.removeAttribute("data-modal-open")
     }
   }, [isOpen])
 
@@ -45,7 +48,7 @@ export default function WorkWithMeModal({ isOpen, onClose }: WorkWithMeModalProp
   }
 
   return (
-    <div className={`fixed inset-0 z-[100] ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
+    <div data-swipe-exempt="true" className={`fixed inset-0 z-[100] ${isOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
       {/* Backdrop */}
       <div
         onClick={handleBackdropClick}
@@ -130,16 +133,12 @@ export default function WorkWithMeModal({ isOpen, onClose }: WorkWithMeModalProp
 
               <div>
                 <label className="block text-xs text-black/70 mb-1">Types of Collaboration</label>
-                <select
+                <input
+                  type="text"
                   name="engagement"
+                  placeholder="e.g., Project Based, Retainer, Consultation, Other"
                   className="w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black/10"
-                  defaultValue="project"
-                >
-                  <option value="project">Project Based</option>
-                  <option value="retainer">Retainer</option>
-                  <option value="consultation">Consultation</option>
-                  <option value="other">Other</option>
-                </select>
+                />
               </div>
 
               <div>

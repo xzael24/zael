@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, Suspense, lazy } from "react"
+import { usePerformanceTuner } from "@/hooks/use-performance-tuner"
 import { motion, AnimatePresence } from "framer-motion"
 
 // Lazy load shader components (same as home)
@@ -14,6 +15,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   const [progress, setProgress] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
+  const { animationSpeed, qualityScale, effectiveDpr } = usePerformanceTuner({ baseSpeed: 0.3 })
 
   // Same gradient colors as home (shader-background-stable default)
   const gradientColors = ["#000000", "#1d4ed8", "#3b82f6", "#93c5fd", "#312e81"]
@@ -31,23 +33,25 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     }
     preloadShaders()
 
-    // Simulasi loading progress
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          setIsComplete(true)
-          // Delay sebelum hide preloader
-          setTimeout(() => {
-            onComplete?.()
-          }, 500)
-          return 100
-        }
-        return prev + Math.random() * 15 + 5 // Random increment untuk natural feel
-      })
-    }, 100)
+    // Progress via rAF agar sinkron dengan frame rate browser
+    const total = 2000
+    const start = performance.now()
+    let rafId: number
 
-    return () => clearInterval(interval)
+    const tick = (ts: number) => {
+      const elapsed = ts - start
+      const pct = Math.min((elapsed / total) * 100, 100)
+      setProgress(pct)
+      if (pct >= 100) {
+        setIsComplete(true)
+        setTimeout(() => { onComplete?.() }, 500)
+      } else {
+        rafId = requestAnimationFrame(tick)
+      }
+    }
+
+    rafId = requestAnimationFrame(tick)
+    return () => { if (rafId) cancelAnimationFrame(rafId) }
   }, [onComplete])
 
   return (
@@ -71,7 +75,10 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                 <MeshGradient
                   className="absolute inset-0 w-full h-full"
                   colors={gradientColors}
-                  speed={0.3}
+                  speed={animationSpeed}
+                  style={{ imageRendering: qualityScale < 1 ? 'pixelated' as any : undefined, willChange: 'transform, opacity' }}
+                  data-effective-dpr={effectiveDpr}
+                  data-quality-scale={qualityScale}
                 />
               </Suspense>
             ) : (

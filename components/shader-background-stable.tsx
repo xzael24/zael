@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useEffect, useRef, useState, Suspense, lazy } from "react"
+import { usePerformanceTuner } from "@/hooks/use-performance-tuner"
 
 // Lazy load shader components
 const MeshGradient = lazy(() => import("@paper-design/shaders-react").then(module => ({ default: module.MeshGradient })))
@@ -15,6 +16,7 @@ interface ShaderBackgroundProps {
 
 export default function ShaderBackground({ children, isAbout = false, isProjects = false, isContact = false }: ShaderBackgroundProps) {
   const [isLoaded, setIsLoaded] = useState(false)
+  const { animationSpeed, effectiveDpr, qualityScale } = usePerformanceTuner({ maxDevicePixelRatio: 1.5, baseSpeed: 0.3 })
 
   useEffect(() => {
     // Preload shader components
@@ -69,7 +71,16 @@ export default function ShaderBackground({ children, isAbout = false, isProjects
           <MeshGradient
             className="absolute inset-0 w-full h-full"
             colors={gradientColors}
-            speed={0.3}
+            // Samakan kecepatan animasi berdasarkan FPS lintas browser
+            speed={animationSpeed}
+            // Jika lib mendukung quality/dpr, beberapa lib membaca style/attr ini
+            style={{
+              // Hint untuk menurunkan biaya raster di DPI tinggi
+              imageRendering: qualityScale < 1 ? 'pixelated' : undefined,
+              willChange: 'transform, opacity'
+            }}
+            data-effective-dpr={effectiveDpr}
+            data-quality-scale={qualityScale}
           />
         </Suspense>
       )}

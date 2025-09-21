@@ -6,6 +6,7 @@ import { Instrument_Serif } from "next/font/google"
 import "./globals.css"
 import SwipeHint from "@/components/swipe-hint"
 import AppShell from "@/components/app-shell"
+import { Toaster } from "@/components/toaster"
 
 // Optimasi font loading dengan preload dan subset minimal
 const figtree = Figtree({
@@ -81,6 +82,7 @@ html {
           {children}
           <SwipeHint />
         </AppShell>
+        <Toaster />
       </body>
     </html>
   )

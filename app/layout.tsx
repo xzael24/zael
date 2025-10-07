@@ -4,7 +4,6 @@ import { Figtree } from "next/font/google"
 import { GeistMono } from "geist/font/mono"
 import { Instrument_Serif } from "next/font/google"
 import "./globals.css"
-import SwipeHint from "@/components/swipe-hint"
 import AppShell from "@/components/app-shell"
 import { Toaster } from "@/components/toaster"
 
@@ -80,7 +79,6 @@ html {
       <body className={`${figtree.variable} ${instrumentSerif.variable}`}>
         <AppShell>
           {children}
-          <SwipeHint />
         </AppShell>
         <Toaster />
       </body>

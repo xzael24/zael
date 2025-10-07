@@ -19,7 +19,16 @@ export default function ShaderBackground({ children, isAbout = false, isProjects
   const { animationSpeed, effectiveDpr, qualityScale } = usePerformanceTuner({ maxDevicePixelRatio: 1.5, baseSpeed: 0.3 })
 
   useEffect(() => {
-    // Preload shader components
+    // Preload shader components saat idle agar tidak ganggu TTI
+    const schedule = (cb: () => void) => {
+      if (typeof (window as any).requestIdleCallback === 'function') {
+        ;(window as any).requestIdleCallback(cb, { timeout: 1500 })
+      } else {
+        // Fallback kecil jika browser tidak mendukung
+        setTimeout(cb, 600)
+      }
+    }
+
     const preloadShaders = async () => {
       try {
         await import("@paper-design/shaders-react")
@@ -29,8 +38,8 @@ export default function ShaderBackground({ children, isAbout = false, isProjects
         setIsLoaded(true) // Fallback to basic rendering
       }
     }
-    
-    preloadShaders()
+
+    schedule(preloadShaders)
   }, [])
 
   // Gunakan gradien kuning untuk halaman About, selain itu tetap biru

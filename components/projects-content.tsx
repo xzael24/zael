@@ -22,7 +22,7 @@ export default function ProjectsContent() {
         {/* Card container: scroll horizontal di mobile & tablet, center di desktop */}
         <div
           data-swipe-exempt="true"
-          className="flex gap-3 md:gap-4 overflow-x-auto lg:overflow-visible whitespace-nowrap lg:whitespace-normal -mx-4 px-4 lg:mx-0 lg:px-0 justify-start lg:justify-center snap-x snap-mandatory"
+          className="flex gap-3 md:gap-4 overflow-x-auto lg:overflow-visible whitespace-nowrap lg:whitespace-normal -mx-4 pl-6 pr-6 sm:pl-8 sm:pr-8 lg:mx-0 lg:px-0 justify-start lg:justify-center snap-x snap-mandatory scroll-px-6 sm:scroll-px-8"
         >
           {['Web Tools/Utilities', 'Portfolio & Personal Websites', 'Business/Company Websites', 'Web Application (Full CRUD)'].map((category, i) => (
             <button
@@ -30,7 +30,7 @@ export default function ProjectsContent() {
               type="button"
               onClick={() => { setSelectedProject({ id: i + 1, title: category }); setIsModalOpen(true) }}
               aria-label={`View ${category} projects`}
-              className="relative group overflow-hidden shrink-0 snap-start w-44 sm:w-56 md:w-64 p-4 rounded-xl border border-white/10 bg-white/5 lg:hover:bg-white/10 transition-colors text-center focus:outline-none focus:ring-2 focus:ring-white/30"
+              className="relative group overflow-hidden shrink-0 snap-start w-44 sm:w-56 md:w-64 p-4 rounded-xl border border-white/10 bg-white/5 lg:hover:bg-white/10 transition-colors text-center focus:outline-none focus:ring-2 focus:ring-white/30 first:ml-1 last:mr-1"
             >
               {/* Hover overlay text */}
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 z-0">

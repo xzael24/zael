@@ -38,6 +38,21 @@ export const metadata: Metadata = {
   title: "Zael - Frontend Developer",
   description: "Portfolio of Zael, a frontend developer creating clean, responsive, and engaging web applications with modern tools and design.",
   generator: "Next.js",
+  keywords: [
+    "Zael",
+    "Zaim El Yafi",
+    "Frontend Developer",
+    "Web Developer",
+    "Portfolio",
+    "React",
+    "Next.js",
+  ],
+  authors: [{ name: "Zaim El Yafi", url: process.env.NEXT_PUBLIC_APP_URL || 'https://zael.vercel.app' }],
+  creator: "Zaim El Yafi",
+  publisher: "Zaim El Yafi",
+  alternates: {
+    canonical: '/',
+  },
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml", sizes: "any" }
@@ -75,6 +90,29 @@ html {
   --font-instrument-serif: ${instrumentSerif.variable};
 }
         `}</style>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": "Zaim El Yafi",
+          "alternateName": ["Zael", "Zael Frontend Developer"],
+          "url": process.env.NEXT_PUBLIC_APP_URL || 'https://zael.vercel.app',
+          "jobTitle": "Frontend Developer",
+          "image": "/logo1.svg",
+        }) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Zael - Frontend Developer",
+          "url": process.env.NEXT_PUBLIC_APP_URL || 'https://zael.vercel.app',
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": (process.env.NEXT_PUBLIC_APP_URL || 'https://zael.vercel.app') + "/?q={search_term_string}",
+            },
+            "query-input": "required name=search_term_string"
+          }
+        }) }} />
       </head>
       <body className={`${figtree.variable} ${instrumentSerif.variable}`}>
         <AppShell>

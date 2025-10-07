@@ -36,7 +36,16 @@ export default function AboutContent() {
 
   return (
     <main className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 w-full max-w-5xl px-4">
-      <div className="text-center">
+      <div className="text-center relative">
+        {/* Subtle on-page name for SEO, extremely low opacity, moved to top-right */}
+        <span className="sr-only">Zaim El Yafi (Zael)</span>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none select-none text-white absolute top-2 right-3 z-10 text-[3vw] md:text-[1.2vw] font-normal tracking-tight"
+          style={{ opacity: 0.02 }}
+        >
+          Zaim El Yafi
+        </div>
 
         <h1 className="text-5xl md:text-6xl md:leading-16 tracking-tight font-light text-white mb-4">
           <span className="font-medium italic instrument">This</span> Is Me
